@@ -9,7 +9,7 @@ from src.etl_utils.transformations import (
     standardize_column_names,
     trim_string_columns
 )
-from src.etl_utils.file_utils import  write_json
+from src.etl_utils.file_utils import  read_csv,read_json,write_csv,write_json
 from src.etl_utils.logger import configure_logging
 import pandas as  pd
 
@@ -30,11 +30,11 @@ def main():
     df=standardize_column_names(df)
     df=trim_string_columns(df)
     # Define file paths
-    #input_file = "data/input_data.csv"
-    #output_file = "data/cleaned_data.csv"
+    input_file = "data/raw/input_data.csv"
+    output_file = "data/processed/cleaned_data.csv"
 
     # Read the CSV file
-    #df = read_csv(input_file)
+    df = read_csv(input_file)
 
     # Validate required columns
     required_columns = ["id", "firstName", "lastName","maidenName","age","gender","email","phone","username","password","birthDate","image","bloodGroup","height","weight","eyeColor","hair","domain","ip","address_address","address_city","address_coordinates_latitude","address_coordinates_longitude","address_postalCode","address_state"]
