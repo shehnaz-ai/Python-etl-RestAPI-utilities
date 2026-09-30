@@ -1,18 +1,106 @@
-pipeline:
-  name: customer_etl
-  environment: dev
 
-api:
-  base_url: https://dummyjson.com
-  endpoint: /users
-  timeout: 30
+environment: development
 
-validation:
-  required_columns:
-    - id
-    - first_name
-    - last_name
-    - email
+defaults:
+  log_level: INFO
+  error_policy: fail_pipeline
 
-output:
-  path: data/processed/users_processed.csv
+pipelines:
+  - name: customers
+    enabled: true
+
+    source:
+      type: csv
+      path: data/raw/customers.csv
+
+    primary_key:
+      - customer_id
+
+    quality_rules:
+      - type: not_null
+        columns: [customer_id, email]
+      - type: unique
+        columns: [customer_id]
+      - type: email
+        column: email
+
+    transformations:
+      - type: trim
+        columns: [name, email, city, country]
+      - type: uppercase
+        columns: [status]
+      - type: rename
+        mapping:
+          created_date: created_at
+          updated_date: updated_at
+
+    target:
+      type: csv
+      path: data/processed/customers.csv
+
+  - name: transactions
+    enabled: true
+
+    source:
+      type: json
+      path: data/raw/transactions.json
+
+    primary_key:
+      - transaction_id
+
+    quality_rules:
+      - type: not_null
+        columns: [transaction_id, customer_id, amount]
+      - type: unique
+        columns: [transaction_id]
+
+    transformations:
+      - type: numeric
+        columns:
+          amount: float64
+      - type: uppercase
+        columns: [transaction_type]
+
+    target:
+      type: parquet
+      path: data/processed/transactions
+
+  - name: api_customers
+    enabled: true
+
+    source:
+      type: api
+      url: https://dummyjson.com/users
+      records_path: users
+
+      pagination:
+        enabled: true
+        type: limit_offset
+        page_size: 30
+
+    primary_key:
+      - id
+
+    quality_rules:
+      - type: not_null
+        columns:
+          - id
+          - email
+
+      - type: unique
+        columns:
+          - id
+
+    transformations:
+      - type: trim
+        columns:
+          - firstName
+          - lastName
+          - email
+
+    target:
+      type: parquet
+      path: data/processed/api_customers
+
+    incremental:
+      enabled: false

@@ -1,0 +1,5 @@
+customer_id,name,email,city,country,status,created_date,updated_date
+1,John Smith,john@example.com,New York,USA,ACTIVE,2025-01-01,2025-01-10
+2,Sarah Khan,sarah@example.com,London,UK,ACTIVE,2025-01-02,2025-01-11
+4,Alice Brown,alice@example.com,Sydney,Australia,ACTIVE,2025-01-04,2025-01-13
+5,Mike Wilson,mike@example.com,Berlin,Germany,ACTIVE,2025-01-05,2025-01-14

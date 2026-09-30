@@ -1,0 +1,4 @@
+customer_id,name,email,city,status,created_at,amount,amount_with_tax
+1,john smith,john@example.com,New York,ACTIVE,2025-01-01,1200.5,1416.59
+2,sarah khan,sarah@example.com,London,ACTIVE,2025-01-02,800.0,944.0
+4,alice brown,alice@example.com,Sydney,ACTIVE,2025-01-04,300.0,354.0
